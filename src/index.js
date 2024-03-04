@@ -6,6 +6,9 @@ import { createCard, deleteCard, likeCard } from './components/card.js';
 // Функция инициализации модальных окон
 function setPopupListeners() {
   const popups = document.querySelectorAll('.popup');
+  const editProfilePopup = document.querySelector('.popup_type_edit');
+  const newCardPopup = document.querySelector('.popup_type_new-card');
+  const imagePopup = document.querySelector('.popup_type_image');
 
   popups.forEach(popup => {
     const closeButton = popup.querySelector('.popup__close');
@@ -23,8 +26,12 @@ function setPopupListeners() {
   const editProfileButton = document.querySelector('.profile__edit-button');
   const addCardButton = document.querySelector('.profile__add-button');
 
-  editProfileButton.addEventListener('click', () => openPopup(document.querySelector('.popup_type_edit')));
-  addCardButton.addEventListener('click', () => openPopup(document.querySelector('.popup_type_new-card')));
+  editProfileButton.addEventListener('click', () => {
+    openPopup(editProfilePopup);
+    populateProfileForm(); // Вставляем данные пользователя в форму при открытии попапа профиля
+  });
+  
+  addCardButton.addEventListener('click', () => openPopup(newCardPopup));
 }
 
 // Вызов функции инициализации модальных окон
@@ -35,15 +42,14 @@ const placesList = document.querySelector('.places__list');
 
 // Функция открытия попапа с изображением
 function openImagePopup(imageLink, imageName) {
-  const imagePopup = document.querySelector('.popup_type_image');
-  const popupImage = imagePopup.querySelector('.popup__image');
-  const popupCaption = imagePopup.querySelector('.popup__caption');
+  const popupImage = document.querySelector('.popup_type_image .popup__image');
+  const popupCaption = document.querySelector('.popup_type_image .popup__caption');
 
   popupImage.src = imageLink;
   popupImage.alt = imageName;
   popupCaption.textContent = imageName;
 
-  openPopup(imagePopup);
+  openPopup(document.querySelector('.popup_type_image'));
 }
 
 // Вывод карточек на страницу
@@ -64,6 +70,17 @@ function updateProfile(name, description) {
 
   profileTitle.textContent = name;
   profileDescription.textContent = description;
+}
+
+// Функция заполнения формы профиля текущими данными пользователя
+function populateProfileForm() {
+  const currentName = document.querySelector('.profile__title').textContent;
+  const currentDescription = document.querySelector('.profile__description').textContent;
+  const nameInput = document.querySelector('.popup_type_edit .popup__input_type_name');
+  const descriptionInput = document.querySelector('.popup_type_edit .popup__input_type_description');
+
+  nameInput.value = currentName;
+  descriptionInput.value = currentDescription;
 }
 
 // Функция обработки события submit для формы редактирования профиля
@@ -88,9 +105,9 @@ editProfileForm.addEventListener('submit', handleFormSubmit);
 // Функция создания новой карточки
 function createNewCard(cardData) {
   const cardElement = createCard(cardData, deleteCard, likeCard, openImagePopup);
+
   placesList.prepend(cardElement);
 }
-
 
 // Функция обработки события submit для формы добавления новой карточки
 function handleAddCardFormSubmit(evt) {
