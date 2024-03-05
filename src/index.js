@@ -3,12 +3,18 @@ import { initialCards } from './components/cards.js';
 import { openPopup, closePopup } from './components/modal.js';
 import { createCard, deleteCard, likeCard } from './components/card.js';
 
-// Функция инициализации модальных окон
+// Кешируем часто используемые DOM-элементы
+const imagePopup = document.querySelector('.popup_type_image');
+const popupImage = imagePopup.querySelector('.popup__image');
+const popupCaption = imagePopup.querySelector('.popup__caption');
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
+const editProfileForm = document.querySelector('.popup_type_edit .popup__form');
+const addCardForm = document.querySelector('.popup_type_new-card .popup__form');
+
+// Функция для установки обработчиков событий для модальных окон
 function setPopupListeners() {
   const popups = document.querySelectorAll('.popup');
-  const editProfilePopup = document.querySelector('.popup_type_edit');
-  const newCardPopup = document.querySelector('.popup_type_new-card');
-  const imagePopup = document.querySelector('.popup_type_image');
 
   popups.forEach(popup => {
     const closeButton = popup.querySelector('.popup__close');
@@ -26,33 +32,38 @@ function setPopupListeners() {
   const editProfileButton = document.querySelector('.profile__edit-button');
   const addCardButton = document.querySelector('.profile__add-button');
 
+  // Устанавливаем обработчик для кнопки редактирования профиля
   editProfileButton.addEventListener('click', () => {
-    openPopup(editProfilePopup);
-    populateProfileForm(); // Вставляем данные пользователя в форму при открытии попапа профиля
+    const profileName = profileTitle.textContent;
+    const profileDesc = profileDescription.textContent;
+    const editPopup = document.querySelector('.popup_type_edit');
+    const nameInput = editPopup.querySelector('.popup__input_type_name');
+    const descriptionInput = editPopup.querySelector('.popup__input_type_description');
+
+    nameInput.value = profileName;
+    descriptionInput.value = profileDesc;
+
+    openPopup(editPopup);
   });
-  
-  addCardButton.addEventListener('click', () => openPopup(newCardPopup));
+
+  // Устанавливаем обработчик для кнопки добавления новой карточки
+  addCardButton.addEventListener('click', () => openPopup(document.querySelector('.popup_type_new-card')));
 }
 
-// Вызов функции инициализации модальных окон
-setPopupListeners();
+setPopupListeners(); // Вызываем функцию для установки обработчиков событий для модальных окон
 
-// DOM узел для списка карточек
 const placesList = document.querySelector('.places__list');
 
-// Функция открытия попапа с изображением
+// Функция для открытия модального окна с изображением
 function openImagePopup(imageLink, imageName) {
-  const popupImage = document.querySelector('.popup_type_image .popup__image');
-  const popupCaption = document.querySelector('.popup_type_image .popup__caption');
-
   popupImage.src = imageLink;
   popupImage.alt = imageName;
   popupCaption.textContent = imageName;
 
-  openPopup(document.querySelector('.popup_type_image'));
+  openPopup(imagePopup);
 }
 
-// Вывод карточек на страницу
+// Функция для отображения начальных карточек на странице
 function renderInitialCards() {
   initialCards.forEach((cardData) => {
     const cardElement = createCard(cardData, deleteCard, likeCard, openImagePopup);
@@ -60,32 +71,17 @@ function renderInitialCards() {
   });
 }
 
-// Вызываем функцию для вывода карточек на страницу
 renderInitialCards();
 
-// Функция обновления информации о пользователе на странице
+// Функция для обновления информации о пользователе на странице
 function updateProfile(name, description) {
-  const profileTitle = document.querySelector('.profile__title');
-  const profileDescription = document.querySelector('.profile__description');
-
   profileTitle.textContent = name;
   profileDescription.textContent = description;
 }
 
-// Функция заполнения формы профиля текущими данными пользователя
-function populateProfileForm() {
-  const currentName = document.querySelector('.profile__title').textContent;
-  const currentDescription = document.querySelector('.profile__description').textContent;
-  const nameInput = document.querySelector('.popup_type_edit .popup__input_type_name');
-  const descriptionInput = document.querySelector('.popup_type_edit .popup__input_type_description');
-
-  nameInput.value = currentName;
-  descriptionInput.value = currentDescription;
-}
-
-// Функция обработки события submit для формы редактирования профиля
+// Функция для обработки события отправки формы редактирования профиля
 function handleFormSubmit(evt) {
-  evt.preventDefault(); // Отменяем стандартное поведение формы
+  evt.preventDefault();
 
   const formElement = evt.currentTarget;
   const nameInput = formElement.querySelector('.popup__input_type_name');
@@ -96,22 +92,16 @@ function handleFormSubmit(evt) {
   closePopup(formElement.closest('.popup'));
 }
 
-// Находим форму редактирования профиля в DOM
-const editProfileForm = document.querySelector('.popup_type_edit .popup__form');
-
-// Прикрепляем обработчик к форме редактирования профиля
 editProfileForm.addEventListener('submit', handleFormSubmit);
-
-// Функция создания новой карточки
+// Функция для создания новой карточки
 function createNewCard(cardData) {
   const cardElement = createCard(cardData, deleteCard, likeCard, openImagePopup);
-
   placesList.prepend(cardElement);
 }
 
-// Функция обработки события submit для формы добавления новой карточки
+// Функция для обработки события отправки формы добавления новой карточки
 function handleAddCardFormSubmit(evt) {
-  evt.preventDefault(); // Отменяем стандартное поведение формы
+  evt.preventDefault();
 
   const formElement = evt.currentTarget;
   const nameInput = formElement.querySelector('.popup__input_type_card-name');
@@ -127,8 +117,4 @@ function handleAddCardFormSubmit(evt) {
   closePopup(formElement.closest('.popup'));
 }
 
-// Находим форму добавления новой карточки в DOM
-const addCardForm = document.querySelector('.popup_type_new-card .popup__form');
-
-// Прикрепляем обработчик к форме добавления новой карточки
 addCardForm.addEventListener('submit', handleAddCardFormSubmit);
