@@ -16,6 +16,8 @@ const nameInput = editProfileForm.querySelector('.popup__input_type_name');
 const descriptionInput = editProfileForm.querySelector('.popup__input_type_description');
 const cardNameInput = addCardForm.querySelector('.popup__input_type_card-name');
 const cardLinkInput = addCardForm.querySelector('.popup__input_type_url');
+const popupImage = imagePopup.querySelector('.popup__image');
+const editProfileButton = document.querySelector('.profile__edit-button');
 
 // Функция инициализации модальных окон
 function setPopupListeners() {
@@ -34,16 +36,28 @@ function setPopupListeners() {
     });
   });
 
-  const editProfileButton = document.querySelector('.profile__edit-button');
   const addCardButton = document.querySelector('.profile__add-button');
 
-  editProfileButton.addEventListener('click', () => openPopup(editProfilePopup));
   addCardButton.addEventListener('click', () => openPopup(addCardPopup));
 }
 
+// Функция открытия попапа профиля с данными пользователя
+function openEditProfilePopup() {
+  setProfileData(); // Установка данных профиля в инпуты
+  openPopup(editProfilePopup); // Открытие попапа профиля
+}
+
+// Функция установки данных профиля в инпуты попапа редактирования профиля
+function setProfileData() {
+  nameInput.value = profileTitle.textContent;
+  descriptionInput.value = profileDescription.textContent;
+}
+
+// Добавляем обработчик для кнопки редактирования профиля
+editProfileButton.addEventListener('click', openEditProfilePopup);
+
 // Функция открытия попапа с изображением
 function openImagePopup(imageLink, imageName) {
-  const popupImage = imagePopup.querySelector('.popup__image');
   const popupCaption = imagePopup.querySelector('.popup__caption');
 
   popupImage.src = imageLink;
