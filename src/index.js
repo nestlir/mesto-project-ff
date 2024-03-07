@@ -4,20 +4,20 @@ import { openPopup, closePopup } from './components/modal.js';
 import { createCard, deleteCard, likeCard } from './components/card.js';
 
 // Объявление переменных для поиска DOM-элементов
-const editProfilePopup = document.querySelector('.popup_type_edit');
-const addCardPopup = document.querySelector('.popup_type_new-card');
-const imagePopup = document.querySelector('.popup_type_image');
-const editProfileForm = editProfilePopup.querySelector('.popup__form');
-const addCardForm = addCardPopup.querySelector('.popup__form');
-const placesList = document.querySelector('.places__list');
-const profileTitle = document.querySelector('.profile__title');
-const profileDescription = document.querySelector('.profile__description');
-const nameInput = editProfileForm.querySelector('.popup__input_type_name');
-const descriptionInput = editProfileForm.querySelector('.popup__input_type_description');
-const cardNameInput = addCardForm.querySelector('.popup__input_type_card-name');
-const cardLinkInput = addCardForm.querySelector('.popup__input_type_url');
-const popupImage = imagePopup.querySelector('.popup__image');
-const editProfileButton = document.querySelector('.profile__edit-button');
+const editProfilePopupElement = document.querySelector('.popup_type_edit');
+const addCardPopupElement = document.querySelector('.popup_type_new-card');
+const imagePopupElement = document.querySelector('.popup_type_image');
+const editProfileFormElement = editProfilePopupElement.querySelector('.popup__form');
+const addCardFormElement = addCardPopupElement.querySelector('.popup__form');
+const placesListElement = document.querySelector('.places__list');
+const profileTitleElement = document.querySelector('.profile__title');
+const profileDescriptionElement = document.querySelector('.profile__description');
+const nameInputElement = editProfileFormElement.querySelector('.popup__input_type_name');
+const descriptionInputElement = editProfileFormElement.querySelector('.popup__input_type_description');
+const cardNameInputElement = addCardFormElement.querySelector('.popup__input_type_card-name');
+const cardLinkInputElement = addCardFormElement.querySelector('.popup__input_type_url');
+const popupImageElement = imagePopupElement.querySelector('.popup__image');
+const editProfileButtonElement = document.querySelector('.profile__edit-button');
 
 // Функция инициализации модальных окон
 function setPopupListeners() {
@@ -38,46 +38,48 @@ function setPopupListeners() {
 
   const addCardButton = document.querySelector('.profile__add-button');
 
-  addCardButton.addEventListener('click', () => openPopup(addCardPopup));
+  addCardButton.addEventListener('click', () => openPopup(addCardPopupElement));
 }
 
 // Функция открытия попапа профиля с данными пользователя
 function openEditProfilePopup() {
-  setProfileData(); // Установка данных профиля в инпуты
-  openPopup(editProfilePopup); // Открытие попапа профиля
+  setProfileData(nameInputElement, descriptionInputElement); // Передаем переменные в функцию setProfileData
+  openPopup(editProfilePopupElement); // Открытие попапа профиля
 }
 
 // Функция установки данных профиля в инпуты попапа редактирования профиля
-function setProfileData() {
-  nameInput.value = profileTitle.textContent;
-  descriptionInput.value = profileDescription.textContent;
+function setProfileData(nameInput, descriptionInput) {
+  if (nameInput && descriptionInput) {
+    nameInput.value = profileTitleElement.textContent;
+    descriptionInput.value = profileDescriptionElement.textContent;
+  }
 }
 
-// Добавляем обработчик для кнопки редактирования профиля
-editProfileButton.addEventListener('click', openEditProfilePopup);
+// Добавление обработчика для кнопки редактирования профиля
+editProfileButtonElement.addEventListener('click', openEditProfilePopup);
 
 // Функция открытия попапа с изображением
 function openImagePopup(imageLink, imageName) {
-  const popupCaption = imagePopup.querySelector('.popup__caption');
+  const popupCaption = imagePopupElement.querySelector('.popup__caption');
 
-  popupImage.src = imageLink;
-  popupImage.alt = imageName;
+  popupImageElement.src = imageLink;
+  popupImageElement.alt = imageName;
   popupCaption.textContent = imageName;
 
-  openPopup(imagePopup);
+  openPopup(imagePopupElement);
 }
 
 // Функция обновления информации о пользователе на странице
 function updateProfile(name, description) {
-  profileTitle.textContent = name;
-  profileDescription.textContent = description;
+  profileTitleElement.textContent = name;
+  profileDescriptionElement.textContent = description;
 }
 
 // Функция обработки события submit для формы редактирования профиля
 function handleFormSubmit(evt) {
   evt.preventDefault(); // Отменяем стандартное поведение формы
 
-  updateProfile(nameInput.value, descriptionInput.value);
+  updateProfile(nameInputElement.value, descriptionInputElement.value);
 
   closePopup(evt.currentTarget.closest('.popup'));
 }
@@ -85,7 +87,7 @@ function handleFormSubmit(evt) {
 // Функция создания новой карточки
 function createNewCard(cardData) {
   const cardElement = createCard(cardData, deleteCard, likeCard, openImagePopup);
-  placesList.prepend(cardElement);
+  placesListElement.prepend(cardElement);
 }
 
 // Функция обработки события submit для формы добавления новой карточки
@@ -93,8 +95,8 @@ function handleAddCardFormSubmit(evt) {
   evt.preventDefault(); // Отменяем стандартное поведение формы
 
   createNewCard({
-    name: cardNameInput.value,
-    link: cardLinkInput.value
+    name: cardNameInputElement.value,
+    link: cardLinkInputElement.value
   });
 
   evt.currentTarget.reset();
@@ -107,9 +109,9 @@ setPopupListeners();
 // Вызываем функцию для вывода карточек на страницу
 initialCards.forEach((cardData) => {
   const cardElement = createCard(cardData, deleteCard, likeCard, openImagePopup);
-  placesList.appendChild(cardElement);
+  placesListElement.appendChild(cardElement);
 });
 
 // Прикрепляем обработчики к формам редактирования профиля и добавления новой карточки
-editProfileForm.addEventListener('submit', handleFormSubmit);
-addCardForm.addEventListener('submit', handleAddCardFormSubmit);
+editProfileFormElement.addEventListener('submit', handleFormSubmit);
+addCardFormElement.addEventListener('submit', handleAddCardFormSubmit);
