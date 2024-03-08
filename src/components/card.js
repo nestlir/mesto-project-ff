@@ -1,5 +1,5 @@
 // Функция создания карточки
-export function createCard(cardData, deleteCardCallback, likeCardCallback, openImagePopupCallback) {
+export function createCard(cardData, deleteCard, likeCard, openImagePopup) {
   const cardElement = document.querySelector('#card-template').content.querySelector('.card').cloneNode(true);
 
   const cardImage = cardElement.querySelector('.card__image');
@@ -11,9 +11,9 @@ export function createCard(cardData, deleteCardCallback, likeCardCallback, openI
   cardImage.alt = cardData.name;
   cardTitle.textContent = cardData.name;
 
-  deleteIcon.addEventListener('click', () => deleteCardCallback(cardElement));
-  likeButton.addEventListener('click', () => likeCardCallback(likeButton));
-  cardImage.addEventListener('click', () => openImagePopupCallback(cardData.link, cardData.name));
+  deleteIcon.addEventListener('click', () => deleteCard(cardElement));
+  likeButton.addEventListener('click', () => likeCard(likeButton));
+  cardImage.addEventListener('click', () => openImagePopup(cardData.link, cardData.name));
 
   return cardElement;
 }
