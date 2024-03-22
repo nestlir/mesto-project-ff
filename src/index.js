@@ -1,53 +1,119 @@
 import './pages/index.css';
-import { initialCards } from './components/cards.js';
 import { openPopup, closePopup } from './components/modal.js';
 import { createCard, deleteCard, likeCard } from './components/card.js';
+import { enableValidation, clearValidation, checkFormValidity } from './components/validation.js';
+import Api from './components/api.js';
+import { domElements } from './components/dom.js';
 
-// Объявление переменных для поиска DOM-элементов
-const editProfilePopupElement = document.querySelector('.popup_type_edit');
-const addCardPopupElement = document.querySelector('.popup_type_new-card');
-const imagePopupElement = document.querySelector('.popup_type_image');
-const editProfileFormElement = editProfilePopupElement.querySelector('.popup__form');
-const addCardFormElement = addCardPopupElement.querySelector('.popup__form');
-const placesListElement = document.querySelector('.places__list');
-const profileTitleElement = document.querySelector('.profile__title');
-const profileDescriptionElement = document.querySelector('.profile__description');
-const nameInputElement = editProfileFormElement.querySelector('.popup__input_type_name');
-const descriptionInputElement = editProfileFormElement.querySelector('.popup__input_type_description');
-const cardNameInputElement = addCardFormElement.querySelector('.popup__input_type_card-name');
-const cardLinkInputElement = addCardFormElement.querySelector('.popup__input_type_url');
-const popupImageElement = imagePopupElement.querySelector('.popup__image');
-const editProfileButtonElement = document.querySelector('.profile__edit-button');
+const {
+  editProfilePopupElement,
+  addCardPopupElement,
+  imagePopupElement,
+  editProfileFormElement,
+  addCardFormElement,
+  placesListElement,
+  profileTitleElement,  
+  profileDescriptionElement,
+  profileAvatarElement,
+  nameInputElement,
+  descriptionInputElement,
+  cardNameInputElement,
+  cardLinkInputElement,
+  popupImageElement,
+  editProfileButtonElement
+} = domElements;
 
-// Функция инициализации модальных окон
-function setPopupListeners() {
-  const popups = document.querySelectorAll('.popup');
+const api = new Api({
+  baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-9',
+  headers: {
+    authorization: '14b58559-029e-496e-9a10-e787d4f1cf4c',
+    'Content-Type': 'application/json'
+  }
+});
 
-  popups.forEach(popup => {
-    const closeButton = popup.querySelector('.popup__close');
-    const overlay = popup;
+function renderUserInfo(userData) {
+  profileTitleElement.textContent = userData.name;
+  profileDescriptionElement.textContent = userData.about;
+  profileAvatarElement.src = userData.avatar;
+  profileAvatarElement.alt = userData.name;
+}
 
-    closeButton.addEventListener('click', () => closePopup(popup));
-
-    overlay.addEventListener('click', (event) => {
-      if (event.target === overlay) {
-        closePopup(popup);
-      }
-    });
+api.getUserInfo()
+  .then((userData) => {
+    renderUserInfo(userData);
+  })
+  .catch((err) => {
+    console.log(`Ошибка при загрузке информации о пользователе: ${err}`);
   });
 
-  const addCardButton = document.querySelector('.profile__add-button');
+api.getInitialCards()
+  .then((cardsData) => {
+    cardsData.forEach((cardData) => {
+      const cardElement = createCard(cardData, deleteCard, likeCard, openImagePopup);
+      placesListElement.appendChild(cardElement);
+    });
+  })
+  .catch((err) => {
+    console.log(`Ошибка при загрузке начальных карточек: ${err}`);
+  });
 
+function updateUserInfoOnServer() {
+  const newName = nameInputElement.value;
+  const newDescription = descriptionInputElement.value;
+
+  api.updateUserInfo({ name: newName, about: newDescription })
+    .then(updatedUserInfo => {
+      renderUserInfo(updatedUserInfo);
+      closePopup(editProfilePopupElement);
+    })
+    .catch(error => {
+      console.error('Ошибка при обновлении информации о пользователе:', error);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setPopupListeners();
+});
+
+function setPopupListeners() {
+  const popups = document.querySelectorAll('.popup');
+  popups.forEach(popup => {
+    popup.addEventListener('click', handlePopupClick);
+  });
+  const addCardButton = document.querySelector('.profile__add-button');
   addCardButton.addEventListener('click', () => openPopup(addCardPopupElement));
 }
 
-// Функция открытия попапа профиля с данными пользователя
-function openEditProfilePopup() {
-  setProfileData(nameInputElement, descriptionInputElement); // Передаем переменные в функцию setProfileData
-  openPopup(editProfilePopupElement); // Открытие попапа профиля
+function handlePopupClick(event) {
+  const popup = event.target.closest('.popup');
+  if (!popup) return;
+  if (event.target.classList.contains('popup__close') || event.target === popup) {
+    closePopup(popup);
+  }
 }
 
-// Функция установки данных профиля в инпуты попапа редактирования профиля
+if (editProfileButtonElement) {
+  editProfileButtonElement.addEventListener('click', openEditProfilePopup);
+}
+
+if (editProfileFormElement) {
+  editProfileFormElement.addEventListener('submit', handleFormSubmit);
+}
+
+if (addCardFormElement) {
+  addCardFormElement.addEventListener('submit', handleAddCardFormSubmit);
+}
+
+function openEditProfilePopup() {
+  setProfileData(nameInputElement, descriptionInputElement);
+  openPopup(editProfilePopupElement);
+}
+
+function createNewCard(cardData) {
+  const cardElement = createCard(cardData, deleteCard, likeCard, openImagePopup);
+  placesListElement.prepend(cardElement);
+}
+
 function setProfileData(nameInput, descriptionInput) {
   if (nameInput && descriptionInput) {
     nameInput.value = profileTitleElement.textContent;
@@ -55,10 +121,6 @@ function setProfileData(nameInput, descriptionInput) {
   }
 }
 
-// Добавление обработчика для кнопки редактирования профиля
-editProfileButtonElement.addEventListener('click', openEditProfilePopup);
-
-// Функция открытия попапа с изображением
 function openImagePopup(imageLink, imageName) {
   const popupCaption = imagePopupElement.querySelector('.popup__caption');
 
@@ -69,49 +131,37 @@ function openImagePopup(imageLink, imageName) {
   openPopup(imagePopupElement);
 }
 
-// Функция обновления информации о пользователе на странице
-function updateProfile(name, description) {
-  profileTitleElement.textContent = name;
-  profileDescriptionElement.textContent = description;
-}
-
-// Функция обработки события submit для формы редактирования профиля
 function handleFormSubmit(evt) {
-  evt.preventDefault(); // Отменяем стандартное поведение формы
-
-  updateProfile(nameInputElement.value, descriptionInputElement.value);
-
+  evt.preventDefault();
+  updateUserInfoOnServer();
+  clearValidation(evt.currentTarget);
+  checkFormValidity(evt.currentTarget);
   closePopup(evt.currentTarget.closest('.popup'));
 }
 
-// Функция создания новой карточки
-function createNewCard(cardData) {
-  const cardElement = createCard(cardData, deleteCard, likeCard, openImagePopup);
-  placesListElement.prepend(cardElement);
-}
-
-// Функция обработки события submit для формы добавления новой карточки
 function handleAddCardFormSubmit(evt) {
-  evt.preventDefault(); // Отменяем стандартное поведение формы
-
+  evt.preventDefault();
   createNewCard({
     name: cardNameInputElement.value,
     link: cardLinkInputElement.value
   });
-
-  evt.currentTarget.reset();
+  clearValidation(evt.currentTarget);
+  checkFormValidity(evt.currentTarget);
   closePopup(evt.currentTarget.closest('.popup'));
 }
 
-// Вызов функции инициализации модальных окон
-setPopupListeners();
+const validationConfig = {
+  formSelector: '.popup__form',
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  errorClass: 'popup__input_type_error'
+};
+enableValidation(validationConfig);
 
-// Вызываем функцию для вывода карточек на страницу
-initialCards.forEach((cardData) => {
-  const cardElement = createCard(cardData, deleteCard, likeCard, openImagePopup);
-  placesListElement.appendChild(cardElement);
+cards.forEach(card => {
+  const cardElement = document.querySelector(`#card-${card.id}`);
+  if (!cardElement) return;
+  const likesCountElement = cardElement.querySelector('.card__likes-count');
+  likesCountElement.textContent = card.likes.length;
 });
-
-// Прикрепляем обработчики к формам редактирования профиля и добавления новой карточки
-editProfileFormElement.addEventListener('submit', handleFormSubmit);
-addCardFormElement.addEventListener('submit', handleAddCardFormSubmit);
