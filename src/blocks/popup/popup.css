@@ -4,17 +4,13 @@
 @import url('./__title/popup__title.css');
 @import url('./__form/popup__form.css');
 @import url('./__input/popup__input.css');
-@import url('./__input/popup__input_type_error.css');
-@import url('./__input/popup__input-error_visible.css');
 @import url('./__button/popup__button.css');
 @import url('./__caption/popup__caption.css');
 @import url('./__image/popup__image.css');
 
 .popup {
   font-family: 'Inter', Arial, sans-serif;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  display: none;
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 0, .5);
