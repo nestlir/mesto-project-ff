@@ -83,7 +83,3 @@ git clone https://github.com/nestlir/mesto-project-ff.git
 - Поставить лайк месту: `PUT https://mesto.nomoreparties.co/cards/likes/:cardId`
 
 - Удалить лайк с места: `DELETE https://mesto.nomoreparties.co/cards/likes/:cardId`
-
-Поставить лайк месту: PUT https://mesto.nomoreparties.co/cards/likes/:cardId
-
-Удалить лайк с места: DELETE https://mesto.nomoreparties.co/cards/likes/:cardId.
