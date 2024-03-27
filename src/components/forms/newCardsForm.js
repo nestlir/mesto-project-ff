@@ -16,7 +16,6 @@ function renderCard(item) {
 }
 
 // Обработчик события отправки формы добавления карточки
-// Форма добавления карточки
 export function handleNewCardFormSubmit(event, callbacksObject, userId) {
   function makeRequest() {
     return postCard(newPlaceNameInput.value, newLinkInput.value)
@@ -25,7 +24,7 @@ export function handleNewCardFormSubmit(event, callbacksObject, userId) {
         const newCardElement = createCard(card, callbacksObject, userId);
         // Добавляем созданный HTML-элемент на страницу
         placesList.prepend(newCardElement); // Предполагается, что placesList - это контейнер для карточек
-        closePopup(newPlaceFormElement);
+        closePopup(newCardForm); // Закрытие попапа после успешного добавления карточки
       });
   }
 

@@ -1,4 +1,4 @@
-import { avatarFormElement, avatarImage } from "../constats.js";
+import { avatarFormElement, avatarImage, avatarForm } from "../constats.js";
 import { patchAvatar } from "../api.js";
 import { closePopup } from "../modal.js";
 import { handleSubmit } from "./utilsForms.js";
