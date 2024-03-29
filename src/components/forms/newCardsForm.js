@@ -10,9 +10,9 @@ import {
 import { handleSubmit } from "./utilsForms.js";
 
 // Универсальная функция для добавления карточки в список мест
-function renderCard(item) {
-  const cardElement = createCard(item);
-  placesList.prepend(cardElement);
+function renderCard(item, method = "prepend") {
+  const cardElement = createCard(item, callbacks);
+  cardList[method](cardElement);
 }
 
 // Обработчик события отправки формы добавления карточки

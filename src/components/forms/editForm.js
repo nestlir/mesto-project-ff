@@ -26,6 +26,7 @@ export function handleFormSubmit(evt) {
         // Обновление отображаемых данных профиля на странице
         userNameElement.textContent = dataUser.name;
         userJobElement.textContent = dataUser.about;
+        console.dir(name, about);
         // Установка начальных значений в форме редактирования профиля
         setInitialEditProfileFormValues();
         // Закрытие попапа после успешного обновления профиля
