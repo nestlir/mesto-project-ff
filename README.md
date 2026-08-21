@@ -1,85 +1,42 @@
-# Проектная работа Mesto
-[Перейти на сайт](https://nestlir.github.io/mesto-project-ff/)
+# Mesto — Social Photo Platform
 
-Этот проект выполнен в рамках обучения в Яндекс.Практикуме. Проект представляет собой веб-приложение для обмена фотографиями мест. Пользователи могут редактировать свой профиль, добавлять новые места, ставить лайки другим местам и удалять их.
+> Single-page social experience for publishing places, editing profiles and interacting with community content.
 
-## Демо
+[**Live demo →**](https://nestlir.github.io/mesto-project-ff/)
 
-Вы можете ознакомиться с демонстрацией проекта по ссылке: 
-[Демо](https://nestlir.github.io/mesto-project-ff/)
+## Product overview
 
-![Изображение 4](pictur/supasnap-2024-03-27-16.52.32.png)
+Mesto is a frontend application that models a lightweight social product: users manage their profile, publish places, like content and remove their own cards. The project combines API integration, asynchronous UI updates and form-driven interactions.
 
-Обновление автара:
+## Key features
 
-![Изображение 1](pictur/supasnap-2024-03-27-16.45.51.png)
+- profile editing and avatar updates;
+- create/delete place cards;
+- like/unlike interactions;
+- image preview in a modal;
+- form validation;
+- API integration for user and card data;
+- responsive interface.
 
-Добавление карточки с новым местом:
+## Engineering focus
 
-![Изображение 2](pictur/supasnap-2024-03-27-16.47.33.png)
+The project demonstrates the transition from static layout work to application frontend development: state changes, API requests, user feedback, form validation and UI synchronization.
 
-Открытие картинки при нажатие:
+## Stack
 
-![Изображение 3](pictur/supasnap-2024-03-27-16.48.55.png)
+**HTML5 · CSS3 · JavaScript · REST API · responsive design**
 
-Редактирование профиля:
-
-![Изображение 5](pictur/supasnap-2024-03-27-16.46.55.png)
-
-
-## Функциональность
-
-- Валидация форм редактирования профиля и добавления нового места.
-- Интеграция с API для загрузки информации о пользователе и местах.
-- Добавление, удаление и лайки мест.
-- Возможность изменять аватар пользователя.
-
-## Технологии
-
-- HTML
-- CSS
-- JavaScript
-- API
-
-## Установка
-
-1. Клонируйте репозиторий:
+## Run locally
 
 ```bash
 git clone https://github.com/nestlir/mesto-project-ff.git
+cd mesto-project-ff
+npm install
+npm run dev
+```
 
-# Использование
+Use the live demo for the deployed version.
 
-- **Редактирование профиля:** Нажмите на кнопку "Редактировать профиль", внесите необходимые изменения в поля и нажмите "Сохранить".
+## Context
 
-- **Добавление нового места:** Нажмите на кнопку "Добавить место", введите название и ссылку на изображение, затем нажмите "Создать".
-
-- **Лайки:** Нажмите на иконку сердца, чтобы поставить лайк месту.
-
-- **Удаление места:** Нажмите на иконку корзины, чтобы удалить место.
-
-# Улучшения
-
-- Проверка ошибок при редактировании данных пользователя.
-  
-- Использование Network для отслеживания запросов.
-  
-- Добавление всплывающего окна для подтверждения удаления места.
-
-# API
-
-Для взаимодействия с сервером используются следующие эндпоинты:
-
-- Получение информации о пользователе: `GET https://mesto.nomoreparties.co/users/me`
-
-- Редактирование профиля пользователя: `PATCH https://mesto.nomoreparties.co/users/me`
-
-- Получение списка мест: `GET https://mesto.nomoreparties.co/cards`
-
-- Добавление нового места: `POST https://mesto.nomoreparties.co/cards`
-
-- Удаление места: `DELETE https://mesto.nomoreparties.co/cards/:cardId`
-
-- Поставить лайк месту: `PUT https://mesto.nomoreparties.co/cards/likes/:cardId`
-
-- Удалить лайк с места: `DELETE https://mesto.nomoreparties.co/cards/likes/:cardId`
+Originally created during frontend training; presented here as a case study of interactive UI, API-driven state and responsive product behavior.
