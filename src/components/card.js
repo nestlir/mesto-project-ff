@@ -1,82 +1,69 @@
-import { deleteLikeCard, addLikeCard } from "../components/api";
+import { deleteLikeCard, addLikeCard } from "./api.js";
 import {
   popupImage,
   popupImageCaption,
   buttonTypeCard,
-} from "../components/constats";
+} from "./constats.js";
 
-// Функция добавления темплейта
-export function createCard(cards, callbacksObject, userId) {
+export function createCard(card, callbacksObject, userId) {
   const {
     deleteCardCallback,
     openImageCallback,
     handleLikesCallback,
   } = callbacksObject;
-  // Создание темплейта
-  const cardTemplate = document.querySelector("#card-template");
-  const cardElement = cardTemplate.content
-    .querySelector(".places__item")
+
+  const cardElement = document
+    .querySelector("#card-template")
+    .content.querySelector(".places__item")
     .cloneNode(true);
+
   const cardImage = cardElement.querySelector(".card__image");
   const cardTitle = cardElement.querySelector(".card__title");
   const cardLikeButton = cardElement.querySelector(".card__like-button");
   const cardLikeCounter = cardElement.querySelector(".card__like-counter");
-  // Заполняем атрибуты картинки и текста данными
-  cardImage.src = cards.link;
-  cardImage.alt = cards.name;
-  cardTitle.textContent = cards.name;
-  cardLikeCounter.textContent = cards.likes.length;
   const deleteButton = cardElement.querySelector(".card__delete-button");
-  // Слушатель удаления карточки если пользователь является владельцем
-  if (userId !== cards.owner._id) {
-    deleteButton.style.display = "none";
-    } else {
+
+  cardImage.src = card.link;
+  cardImage.alt = card.name;
+  cardTitle.textContent = card.name;
+  cardLikeCounter.textContent = card.likes.length;
+
+  if (userId === card.owner._id) {
     deleteButton.addEventListener("click", () => {
-      const cardId = cards._id;
-      deleteCardCallback(cardElement , cardId);
+      deleteCardCallback(cardElement, card._id);
     });
+  } else {
+    deleteButton.remove();
   }
-  // Проверка наличия лайка пользователя в массиве likes
-  const isLiked = cards.likes.some((like) => like._id === userId);
-  if (isLiked) {
+
+  if (card.likes.some((like) => like._id === userId)) {
     cardLikeButton.classList.add("card__like-button_is-active");
   }
-  // Слушатель лайка
+
   cardLikeButton.addEventListener("click", () => {
-    handleLikesCallback(cardLikeCounter, cardLikeButton, cards);
+    handleLikesCallback(cardLikeCounter, cardLikeButton, card);
   });
 
-  // Слушатель добавления картинки
   cardImage.addEventListener("click", () => {
     openImageCallback(cardImage, popupImage, popupImageCaption, buttonTypeCard);
   });
 
-  // Возвращаем созданный темплейт
   return cardElement;
 }
 
+export function handleLikes(cardLikeCounter, cardLikeButton, card) {
+  const isLiked = cardLikeButton.classList.contains(
+    "card__like-button_is-active"
+  );
 
-// Функция подсчета лайков
-export function handleLikes(cardLikeCounter, cardLikeButton, cards) {
-  if (cardLikeButton.classList.contains("card__like-button_is-active")) {
-    // Пользователю уже понравилась карточка, поэтому выполните операцию "не нравится".
-    deleteLikeCard(cards._id)
-    .then((res) => {
-      cardLikeButton.classList.toggle("card__like-button_is-active");
-      cardLikeCounter.textContent = res.likes.length;
+  const request = isLiked ? deleteLikeCard(card._id) : addLikeCard(card._id);
+
+  request
+    .then((updatedCard) => {
+      cardLikeButton.classList.toggle("card__like-button_is-active", !isLiked);
+      cardLikeCounter.textContent = updatedCard.likes.length;
     })
-    .catch((err) => {
-      console.error("Произошла ошибка при удалении лайка:", err);
+    .catch((error) => {
+      console.error("Не удалось обновить лайк:", error);
     });
-  } else {
-    // понравилась карта, поэтому выполните аналогичную операцию
-    addLikeCard(cards._id)
-    .then((res) => {
-      cardLikeButton.classList.toggle("card__like-button_is-active");
-      cardLikeCounter.textContent = res.likes.length;
-    })
-    .catch((err) => {
-      console.error("Произошла ошибка при добавлении лайка:", err);
-    });
-  }
 }

@@ -1,29 +1,28 @@
-// Функция для управления текстом кнопки во время загрузки
-function renderLoading(isLoading, button, initialText = "Сохранить", loadingText = "Сохранение...") {
-  if (isLoading) {
-    button.textContent = loadingText;
-  } else {
-    button.textContent = initialText;
-  }
+function renderLoading(
+  isLoading,
+  button,
+  initialText = "Сохранить",
+  loadingText = "Сохранение..."
+) {
+  button.textContent = isLoading ? loadingText : initialText;
 }
 
-// Универсальная функция, которая принимает функцию запроса, объект события и текст во время загрузки
-export function handleSubmit(request, evt, loadingText = "Сохранение...") {
-  evt.preventDefault();
+export function handleSubmit(request, event, loadingText = "Сохранение...") {
+  event.preventDefault();
 
-  const submitButton = evt.submitter;
+  const submitButton = event.submitter;
   const initialText = submitButton.textContent;
+
   renderLoading(true, submitButton, initialText, loadingText);
 
-  // Выполнение запроса
   request()
     .then(() => {
-      evt.target.reset(); // Сброс формы после успешной отправки
+      event.target.reset();
     })
-    .catch((err) => {
-      console.error(`Ошибка: ${err}`);
+    .catch((error) => {
+      console.error("Ошибка:", error);
     })
     .finally(() => {
-      renderLoading(false, submitButton, initialText, loadingText); // Возврат исходного текста кнопки
+      renderLoading(false, submitButton, initialText, loadingText);
     });
 }

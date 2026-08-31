@@ -9,24 +9,15 @@ import {
 } from "../constats.js";
 import { handleSubmit } from "./utilsForms.js";
 
-// Универсальная функция для добавления карточки в список мест
-function renderCard(item, method = "prepend") {
-  const cardElement = createCard(item, callbacks);
-  cardList[method](cardElement);
-}
+export function handleNewCardFormSubmit(event, callbacksObject, getUserId) {
+  const makeRequest = () =>
+    postCard(newPlaceNameInput.value, newLinkInput.value).then((card) => {
+      const userId =
+        typeof getUserId === "function" ? getUserId() : getUserId;
 
-// Обработчик события отправки формы добавления карточки
-export function handleNewCardFormSubmit(event, callbacksObject, userId) {
-  function makeRequest() {
-    return postCard(newPlaceNameInput.value, newLinkInput.value)
-      .then((card) => {
-        // Создаем HTML-элемент для новой карточки
-        const newCardElement = createCard(card, callbacksObject, userId);
-        // Добавляем созданный HTML-элемент на страницу
-        placesList.prepend(newCardElement); // Предполагается, что placesList - это контейнер для карточек
-        closePopup(newCardForm); // Закрытие попапа после успешного добавления карточки
-      });
-  }
+      placesList.prepend(createCard(card, callbacksObject, userId));
+      closePopup(newCardForm);
+    });
 
   handleSubmit(makeRequest, event);
 }

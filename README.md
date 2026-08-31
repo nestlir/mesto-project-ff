@@ -1,85 +1,72 @@
-# Проектная работа Mesto
-[Перейти на сайт](https://nestlir.github.io/mesto-project-ff/)
+# Mesto
 
-Этот проект выполнен в рамках обучения в Яндекс.Практикуме. Проект представляет собой веб-приложение для обмена фотографиями мест. Пользователи могут редактировать свой профиль, добавлять новые места, ставить лайки другим местам и удалять их.
+Responsive social-style web application for managing a profile and a collection of image cards.
 
-## Демо
+## Features
 
-Вы можете ознакомиться с демонстрацией проекта по ссылке: 
-[Демо](https://nestlir.github.io/mesto-project-ff/)
+- profile editing;
+- avatar management;
+- card creation and deletion;
+- likes;
+- popup and modal interactions;
+- client-side form validation;
+- responsive layout.
 
-![Изображение 4](pictur/supasnap-2024-03-27-16.52.32.png)
+## Stack
 
-Обновление автара:
-
-![Изображение 1](pictur/supasnap-2024-03-27-16.45.51.png)
-
-Добавление карточки с новым местом:
-
-![Изображение 2](pictur/supasnap-2024-03-27-16.47.33.png)
-
-Открытие картинки при нажатие:
-
-![Изображение 3](pictur/supasnap-2024-03-27-16.48.55.png)
-
-Редактирование профиля:
-
-![Изображение 5](pictur/supasnap-2024-03-27-16.46.55.png)
-
-
-## Функциональность
-
-- Валидация форм редактирования профиля и добавления нового места.
-- Интеграция с API для загрузки информации о пользователе и местах.
-- Добавление, удаление и лайки мест.
-- Возможность изменять аватар пользователя.
-
-## Технологии
-
-- HTML
-- CSS
 - JavaScript
-- API
+- HTML5
+- CSS
+- Webpack
+- Babel
+- PostCSS
 
-## Установка
+## Architecture
 
-1. Клонируйте репозиторий:
+The interface is organized into reusable JavaScript modules and BEM-style CSS blocks. Webpack builds the production bundle into the `dist/` directory.
+
+## Run locally
+
+Install dependencies:
 
 ```bash
-git clone https://github.com/nestlir/mesto-project-ff.git
+npm ci
+```
 
-# Использование
+Start the development server:
 
-- **Редактирование профиля:** Нажмите на кнопку "Редактировать профиль", внесите необходимые изменения в поля и нажмите "Сохранить".
+```bash
+npm run dev
+```
 
-- **Добавление нового места:** Нажмите на кнопку "Добавить место", введите название и ссылку на изображение, затем нажмите "Создать".
+Create a production build:
 
-- **Лайки:** Нажмите на иконку сердца, чтобы поставить лайк месту.
+```bash
+npm run build
+```
 
-- **Удаление места:** Нажмите на иконку корзины, чтобы удалить место.
+## Deployment
 
-# Улучшения
+The repository includes an automated GitHub Actions workflow that builds the project and publishes the production bundle to GitHub Pages on updates to `main`.
 
-- Проверка ошибок при редактировании данных пользователя.
-  
-- Использование Network для отслеживания запросов.
-  
-- Добавление всплывающего окна для подтверждения удаления места.
+## Available scripts
 
-# API
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm run deploy` | Publish `dist/` with gh-pages |
 
-Для взаимодействия с сервером используются следующие эндпоинты:
+## Project structure
 
-- Получение информации о пользователе: `GET https://mesto.nomoreparties.co/users/me`
+```text
+src/                  Application source code
+src/blocks/           BEM CSS blocks
+src/components/       JavaScript components
+src/images/           Static assets
+.github/workflows/    CI/CD configuration
+```
 
-- Редактирование профиля пользователя: `PATCH https://mesto.nomoreparties.co/users/me`
+## Notes
 
-- Получение списка мест: `GET https://mesto.nomoreparties.co/cards`
-
-- Добавление нового места: `POST https://mesto.nomoreparties.co/cards`
-
-- Удаление места: `DELETE https://mesto.nomoreparties.co/cards/:cardId`
-
-- Поставить лайк месту: `PUT https://mesto.nomoreparties.co/cards/likes/:cardId`
-
-- Удалить лайк с места: `DELETE https://mesto.nomoreparties.co/cards/likes/:cardId`
+This repository is maintained as a frontend portfolio project demonstrating modular JavaScript, responsive UI development and a Webpack-based build pipeline.
