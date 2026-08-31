@@ -21,21 +21,10 @@ Responsive social-style web application for managing a profile and a collection 
 - Babel
 - PostCSS
 
-## Architecture
-
-The interface is organized into reusable JavaScript modules and BEM-style CSS blocks. Webpack builds the production bundle into the `dist/` directory.
-
 ## Run locally
-
-Install dependencies:
 
 ```bash
 npm ci
-```
-
-Start the development server:
-
-```bash
 npm run dev
 ```
 
@@ -47,7 +36,7 @@ npm run build
 
 ## Deployment
 
-The repository includes an automated GitHub Actions workflow that builds the project and publishes the production bundle to GitHub Pages on updates to `main`.
+Deployment is automated with GitHub Actions. Every successful update to `main` builds the application and publishes `dist/` to GitHub Pages.
 
 ## Available scripts
 
@@ -55,7 +44,6 @@ The repository includes an automated GitHub Actions workflow that builds the pro
 |---|---|
 | `npm run dev` | Start the development server |
 | `npm run build` | Create a production build |
-| `npm run deploy` | Publish `dist/` with gh-pages |
 
 ## Project structure
 
@@ -67,6 +55,6 @@ src/images/           Static assets
 .github/workflows/    CI/CD configuration
 ```
 
-## Notes
+## Project value
 
-This repository is maintained as a frontend portfolio project demonstrating modular JavaScript, responsive UI development and a Webpack-based build pipeline.
+A frontend portfolio project demonstrating modular JavaScript, responsive UI development and a Webpack-based production pipeline.
