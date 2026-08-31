@@ -1,30 +1,40 @@
 # Mesto — Social Photo Platform
 
-> Single-page social experience for publishing places, editing profiles and interacting with community content.
+Interactive single-page application for publishing places, managing a profile and interacting with community cards.
 
-[**Live demo →**](https://nestlir.github.io/mesto-project-ff/)
+## Live demo
 
-## Product overview
+https://nestlir.github.io/mesto-project-ff/
 
-Mesto is a frontend application that models a lightweight social product: users manage their profile, publish places, like content and remove their own cards. The project combines API integration, asynchronous UI updates and form-driven interactions.
+## Features
 
-## Key features
-
-- profile editing and avatar updates;
-- create/delete place cards;
-- like/unlike interactions;
-- image preview in a modal;
-- form validation;
-- API integration for user and card data;
+- edit profile information;
+- update avatar;
+- create new place cards;
+- delete cards owned by the current user;
+- like and unlike cards;
+- preview images in a modal;
+- client-side form validation;
+- asynchronous REST API integration;
 - responsive interface.
 
-## Engineering focus
+## Architecture
 
-The project demonstrates the transition from static layout work to application frontend development: state changes, API requests, user feedback, form validation and UI synchronization.
+The project is organised around small JavaScript modules:
 
-## Stack
+- `src/components/api.js` — REST API requests and response handling;
+- `src/components/card.js` — card creation and like interactions;
+- `src/components/modal.js` — modal lifecycle and keyboard/overlay handling;
+- `src/components/validation.js` — reusable form validation;
+- `src/components/forms/` — submit handlers for profile, avatar, cards and deletion;
+- `src/components/constats.js` — DOM references and shared constants;
+- `src/index.js` — application bootstrap and UI orchestration.
 
-**HTML5 · CSS3 · JavaScript · REST API · responsive design**
+The initial user profile and cards are loaded concurrently with `Promise.all()`, then rendered after both requests complete.
+
+## Tech stack
+
+**HTML5 · CSS3 · JavaScript · REST API · Webpack · Babel · PostCSS**
 
 ## Run locally
 
@@ -35,8 +45,24 @@ npm install
 npm run dev
 ```
 
-Use the live demo for the deployed version.
+Create a production build:
 
-## Context
+```bash
+npm run build
+```
 
-Originally created during frontend training; presented here as a case study of interactive UI, API-driven state and responsive product behavior.
+## Deployment
+
+The repository includes a GitHub Pages deployment script:
+
+```bash
+npm run deploy
+```
+
+## Engineering focus
+
+Mesto demonstrates the transition from static frontend development to application development: asynchronous data loading, server-backed state changes, reusable UI modules, event-driven interactions and form validation.
+
+## Project context
+
+Originally created as part of frontend training and subsequently documented as a portfolio case study.
